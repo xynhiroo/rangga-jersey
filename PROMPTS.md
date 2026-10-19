@@ -212,10 +212,45 @@ Fitur **US-03 (Pesan via WhatsApp)** telah selesai dikerjakan.
 ## US-04 Login admin
 
 **Prompt:**
+Baca AGENTS.md bagian aturan keamanan dan docs/user-stories.md bagian US-04.
+
+Buat login admin memakai Supabase Auth (email dan password) dengan @supabase/ssr dan cookie, memakai SUPABASE_URL dan SUPABASE_PUBLISHABLE_KEY. Login diproses dengan Server Action di app/admin/actions.js dan disambungkan ke form di app/admin/login/page.jsx. Login berhasil diarahkan ke /admin; login gagal menampilkan pesan error yang jelas di halaman login. Buat juga tombol "Keluar" di components/NavAdmin.jsx berfungsi: mengakhiri sesi lalu kembali ke /admin/login. Jangan ubah tampilan. Hapus CatatanBelumAktif dari halaman login.
 
 **Hasil:**
+Fitur **US-04 (Login admin)** telah selesai dikerjakan sesuai aturan keamanan `AGENTS.md` dan kriteria `docs/user-stories.md`.
+
+### File yang Dibuat / Diubah
+- [lib/supabase/server.js](file:///d:/xampp/htdocs/jersey-rangga/rangga-jersey/lib/supabase/server.js)
+  - Menambahkan fungsi `createAdminClient` yang menggunakan `@supabase/ssr` (`createServerClient`) bersama `cookies` dari `next/headers`, `SUPABASE_URL`, dan `SUPABASE_PUBLISHABLE_KEY`.
+- [lib/supabase/index.js](file:///d:/xampp/htdocs/jersey-rangga/rangga-jersey/lib/supabase/index.js)
+  - Mengekspor `createAdminClient` agar dapat diakses dari modul server.
+- [app/admin/actions.js](file:///d:/xampp/htdocs/jersey-rangga/rangga-jersey/app/admin/actions.js) *(Baru)*
+  - Server Action `login`: memvalidasi input email & password, mengautentikasi melalui Supabase Auth (`signInWithPassword`) menggunakan cookie sesi admin, mengarahkan ke `/admin` jika berhasil, atau mengembalikan pesan error yang jelas jika gagal.
+  - Server Action `keluar`: mengakhiri sesi admin melalui `supabase.auth.signOut()` lalu mengarahkan kembali ke `/admin/login`.
+- [app/admin/login/page.jsx](file:///d:/xampp/htdocs/jersey-rangga/rangga-jersey/app/admin/login/page.jsx)
+  - Menyambungkan form ke Server Action `login` menggunakan `useActionState`.
+  - Menampilkan pesan error dengan styling token `text-bahaya` dan `border-garis bg-permukaan`.
+  - Menghapus komponen `CatatanBelumAktif` tanpa mengubah tata letak dan tampilan asli.
+- [components/NavAdmin.jsx](file:///d:/xampp/htdocs/jersey-rangga/rangga-jersey/components/NavAdmin.jsx)
+  - Mengubah tombol "Keluar" menjadi submit form yang memanggil Server Action `keluar`, menjaga tata letak dan styling tetap identik.
+
+### Cara Mengetes
+1. Pastikan server dev berjalan (`npm run dev`).
+2. Buka halaman login admin di browser: [http://localhost:3000/admin/login](http://localhost:3000/admin/login).
+3. **Uji Login Gagal**:
+   - Masukkan email salah atau password sembarang (misal `salah@example.com` / `passwordsalah`).
+   - Tekan tombol **Masuk**.
+   - Pastikan muncul pesan error seperti: *"Email atau password salah."* di dalam kotak pesan merah di atas form.
+4. **Uji Login Berhasil**:
+   - Masukkan email dan password admin Supabase yang valid.
+   - Tekan tombol **Masuk**.
+   - Pastikan diarahkan ke dashboard admin di [http://localhost:3000/admin](http://localhost:3000/admin).
+5. **Uji Tombol Keluar**:
+   - Pada halaman `/admin`, klik tombol **Keluar** di pojok kanan atas navigasi admin (`NavAdmin`).
+   - Pastikan sesi diakhiri dan halaman otomatis kembali diarahkan ke [http://localhost:3000/admin/login](http://localhost:3000/admin/login).
 
 **Perbaikan:**
+-
 
 ## US-05 Ganti password
 
