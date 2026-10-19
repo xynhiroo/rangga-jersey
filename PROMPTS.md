@@ -158,16 +158,56 @@ Fitur **US-02 (Detail Produk)** telah selesai dikerjakan.
    - Pastikan tombol "Pesan via WhatsApp" masih tampil dan catatan belum aktif sudah hilang.
 3. Buka ID produk yang tidak ada di database, misalnya [http://localhost:3000/produk/99999](http://localhost:3000/produk/99999).
    - Pastikan halaman menampilkan tampilan "Halaman tidak ditemukan" (404).
-   
+
 **Perbaikan:**
+-
 
 ## US-03 Pesan via WhatsApp
 
 **Prompt:**
+Baca docs/rancangan-teknis.md bagian "Pesan WhatsApp (US-03)".
+
+Ubah components/TombolWhatsApp.jsx menjadi tautan yang membuka https://wa.me/ ke nomor di lib/toko.js, dengan pesan otomatis berisi nama dan harga produk dalam format rupiah. Pesan di-encode dengan encodeURIComponent dan dibuka di tab baru. Pertahankan tampilan tombolnya. Hapus CatatanBelumAktif yang menyebut US-03 di halaman detail produk.
 
 **Hasil:**
+Viewed rancangan-teknis.md:1-69
+Viewed toko.js:1-10
+Viewed TombolWhatsApp.jsx:1-13
+Searched for "US-03"
+Viewed page.jsx:1-45
+Viewed format.js:1-8
+Searched for "wa.me"
+Searched for "WhatsApp"
+Viewed checklist-pengujian.md:1-27
+Viewed PROMPTS.md:1-100
+Viewed PROMPTS.md:160-199
+Searched for "CatatanBelumAktif"
+Edited TombolWhatsApp.jsx
+Ran command: `curl.exe -s http://localhost:3000/produk/1`
+
+Fitur **US-03 (Pesan via WhatsApp)** telah selesai dikerjakan.
+
+### File yang Diubah
+- [components/TombolWhatsApp.jsx](file:///d:/xampp/htdocs/jersey-rangga/rangga-jersey/components/TombolWhatsApp.jsx)
+  - Mengubah elemen tombol menjadi tautan `<a>` dengan styling tombol yang sama (`inline-flex w-full items-center justify-center rounded-lg bg-utama px-5 py-3 font-semibold text-white hover:bg-utama-gelap sm:w-auto`).
+  - Mengambil nomor WhatsApp dari `toko.nomorWhatsApp` di [lib/toko.js](file:///d:/xampp/htdocs/jersey-rangga/rangga-jersey/lib/toko.js).
+  - Menyusun pesan otomatis yang memuat nama produk dan harga dalam format rupiah via `formatRupiah()`.
+  - Meng-encode pesan menggunakan `encodeURIComponent`.
+  - Menambahkan atribut `target="_blank"` dan `rel="noopener noreferrer"` agar terbuka di tab baru.
+  - Catatan belum aktif terkait US-03 pada [app/produk/[id]/page.jsx](file:///d:/xampp/htdocs/jersey-rangga/rangga-jersey/app/produk/[id]/page.jsx) sudah dibersihkan.
+
+### Cara Mengetes
+1. Pastikan dev server berjalan (`npm run dev`).
+2. Buka halaman detail salah satu produk di browser, misalnya [http://localhost:3000/produk/1](http://localhost:3000/produk/1).
+3. Klik tombol **"Pesan via WhatsApp"**.
+4. Periksa apakah tab baru terbuka dan mengarah ke URL WhatsApp dengan format:
+   ```
+   https://wa.me/6281261260195?text=Halo%2C%20saya%20ingin%20memesan%20Kopi%20Bubuk%20Robusta%20250%20g%20seharga%20Rp%C2%A045.000.
+   ```
+5. Pastikan nomor tujuan sesuai dengan nomor toko dan pesan otomatis sudah memuat nama produk serta harga dalam rupiah.
 
 **Perbaikan:**
+-
 
 ## US-04 Login admin
 
