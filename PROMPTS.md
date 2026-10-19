@@ -255,9 +255,74 @@ Fitur **US-04 (Login admin)** telah selesai dikerjakan sesuai aturan keamanan `A
 ## US-05 Ganti password
 
 **Prompt:**
+Baca docs/user-stories.md bagian US-05.
+
+Buat Server Action ganti password di app/admin/actions.js untuk admin yang sedang login, memakai Supabase Auth. Validasi di server: password baru minimal 8 karakter dan harus sama dengan konfirmasi. Tampilkan pesan berhasil atau pesan error yang jelas di halaman. Sambungkan ke form di app/admin/password/page.jsx tanpa mengubah tampilannya. Hapus CatatanBelumAktif dari halaman ini.
 
 **Hasil:**
+Viewed user-stories.md:100-100
+Viewed user-stories.md:1-100
+Listed directory admin
+Viewed actions.js:1-65
+Listed directory lib
+Listed directory supabase
+Viewed index.js:1-4
+Viewed server.js:1-60
+Listed directory rangga-jersey
+Viewed page.jsx:1-28
+Viewed page.jsx:1-43
+Viewed page.jsx:1-39
+Viewed NavAdmin.jsx:1-22
+Viewed DESIGN.md:1-52
+Viewed globals.css:1-34
+Viewed Tombol.jsx:1-26
+Viewed Input.jsx:1-16
+Viewed PROMPTS.md:180-250
+Searched for "text-utama"
+Viewed actions.js:1-65
+Edited actions.js
+Viewed page.jsx:1-43
+Edited page.jsx
+Ran command: `curl.exe -s -o /dev/null -w "%{http_code}" http://localhost:3000/admin/password`
+Used tool: manage_task
+Ran command: `powershell -Command "Invoke-WebRequest -Uri 'http://localhost:3000/admin/password' -UseBasicParsing | Select-Object -ExpandProperty Content"`
+Used tool: manage_task
 
+Fitur **US-05 (Ganti password)** telah selesai dikerjakan sesuai aturan keamanan dan spesifikasi user stories.
+
+### File yang Diubah
+1. [app/admin/actions.js](file:///d:/xampp/htdocs/jersey-rangga/rangga-jersey/app/admin/actions.js)
+   - Menambahkan Server Action `gantiPassword(prevState, formData)`.
+   - Melakukan validasi di sisi server: memastikan input tidak kosong, password baru minimal 8 karakter, serta password baru harus cocok dengan konfirmasi password.
+   - Memeriksa sesi admin di server menggunakan `supabase.auth.getUser()` sebelum melakukan perubahan data.
+   - Memperbarui password menggunakan Supabase Auth via `supabase.auth.updateUser({ password })`.
+   - Mengembalikan pesan berhasil atau pesan error yang jelas dalam bahasa Indonesia yang ramah.
+2. [app/admin/password/page.jsx](file:///d:/xampp/htdocs/jersey-rangga/rangga-jersey/app/admin/password/page.jsx)
+   - Menggunakan directive `"use client"` dan hook `useActionState` untuk menghubungkan form dengan Server Action `gantiPassword`.
+   - Menampilkan kotak pesan error (`text-bahaya`) dan kotak pesan sukses (`text-utama`) sesuai token desain `DESIGN.md`.
+   - Mengatur status tombol submit menjadi disabled dan menampilkan *"Menyimpan..."* ketika form sedang diproses.
+   - Menghapus komponen `CatatanBelumAktif` dari halaman ini tanpa mengubah tata letak asli.
+
+---
+
+### Cara Mengetes
+1. Pastikan dev server sedang berjalan (`npm run dev`).
+2. Masuk sebagai admin terlebih dahulu di [http://localhost:3000/admin/login](http://localhost:3000/admin/login).
+3. Buka halaman ganti password di [http://localhost:3000/admin/password](http://localhost:3000/admin/password).
+4. **Uji Validasi Password Kurang dari 8 Karakter**:
+   - Isi kedua kolom dengan password pendek (misal `12345`).
+   - Klik **Simpan password**.
+   - Pastikan muncul pesan error: *"Password baru harus memiliki minimal 8 karakter."*
+5. **Uji Validasi Konfirmasi Tidak Cocok**:
+   - Isi password baru dengan `passwordbaru123` dan ulangi dengan `passwordsalah123`.
+   - Klik **Simpan password**.
+   - Pastikan muncul pesan error: *"Konfirmasi password tidak cocok dengan password baru."*
+6. **Uji Ganti Password Berhasil**:
+   - Isi kedua kolom dengan password baru yang valid dan sama (minimal 8 karakter).
+   - Klik **Simpan password**.
+   - Pastikan muncul pesan hijau sukses: *"Password berhasil diganti."* dan isian form dibersihkan.
+   - Klik **Keluar**, lalu coba masuk kembali di `/admin/login` dengan password baru untuk memastikan password telah berhasil diperbarui di Supabase Auth.
+   
 **Perbaikan:**
 
 ## US-06 Proteksi halaman admin
