@@ -112,9 +112,53 @@ Halaman katalog di `http://localhost:3000` telah diuji dan berhasil memuat dafta
 ## US-02 Detail produk
 
 **Prompt:**
+Baca docs/user-stories.md bagian US-02.
+
+Ubah app/produk/[id]/page.jsx supaya mengambil satu produk dari tabel "produk" di Supabase berdasarkan id di URL, di sisi server, memakai koneksi Supabase yang sudah dibuat di lib/supabase. Kalau produk tidak ditemukan, panggil notFound(). Jangan ubah tampilannya. Hapus CatatanBelumAktif dari halaman ini, tapi biarkan tombol WhatsApp.
 
 **Hasil:**
+Viewed user-stories.md:1-60
+Viewed page.jsx:1-41
+Listed directory lib
+Listed directory supabase
+Viewed index.js:1-3
+Viewed server.js:1-26
+Viewed page.jsx:1-62
+Viewed schema.sql:1-49
+Searched for "force-dynamic"
+Viewed TombolWhatsApp.jsx:1-13
+Listed directory app
+Viewed not-found.jsx:1-12
+Edited page.jsx
+Ran command: `curl.exe -s -o NUL -w "%{http_code}\n" http://localhost:3000/`
+Ran command: `curl.exe -s http://localhost:3000/produk/1`
 
+I have sent a request to `http://localhost:3000/produk/1` to test the updated product detail page and am waiting for the response.
+
+Used tool: manage_task
+Ran command: `curl.exe -s -o NUL -w "%{http_code}\n" http://localhost:3000/produk/99999`
+
+I am checking the response for `/produk/99999` to verify that `notFound()` returns 404.
+
+Used tool: manage_task
+
+Fitur **US-02 (Detail Produk)** telah selesai dikerjakan.
+
+### File yang Diubah
+- [app/produk/[id]/page.jsx](file:///d:/xampp/htdocs/jersey-rangga/rangga-jersey/app/produk/[id]/page.jsx)
+  - Mengambil data satu produk dari tabel `produk` di Supabase berdasarkan `id` secara *server-side* menggunakan `createServerClient` dari [lib/supabase](file:///d:/xampp/htdocs/jersey-rangga/rangga-jersey/lib/supabase/index.js).
+  - Memanggil `notFound()` dari `next/navigation` jika data produk tidak ditemukan atau terjadi error.
+  - Menghapus komponen `CatatanBelumAktif` dan import data contoh `cariProdukContoh`.
+  - Tetap mempertahankan komponen `TombolWhatsApp` dan seluruh struktur tampilan/gaya yang ada.
+
+### Cara Mengetes
+1. Pastikan server dev berjalan (`npm run dev`).
+2. Buka salah satu produk yang ada di browser, misalnya [http://localhost:3000/produk/1](http://localhost:3000/produk/1).
+   - Pastikan detail produk (foto, kategori, nama, harga rupiah, dan deskripsi) tampil sesuai data dari Supabase.
+   - Pastikan tombol "Pesan via WhatsApp" masih tampil dan catatan belum aktif sudah hilang.
+3. Buka ID produk yang tidak ada di database, misalnya [http://localhost:3000/produk/99999](http://localhost:3000/produk/99999).
+   - Pastikan halaman menampilkan tampilan "Halaman tidak ditemukan" (404).
+   
 **Perbaikan:**
 
 ## US-03 Pesan via WhatsApp
