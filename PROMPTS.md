@@ -364,7 +364,33 @@ Fitur **US-06 (Proteksi halaman admin)** telah selesai dikerjakan sesuai aturan 
 **Perbaikan:**
 -
 
-## Debugging dan fitur bonus
+## US-07 List Produk (Bonus)
 
-Tambahkan bagian baru untuk setiap error yang kamu perbaiki atau fitur bonus yang kamu kerjakan.
+**Prompt:**
+Baca docs/user-stories.md bagian US-07.
+
+Ubah app/admin/page.jsx supaya daftar produk diambil langsung dari database Supabase menggunakan createAdminClient() di sisi server, bukan dari lib/data-contoh.js. Tampilkan daftar produk menggunakan komponen TabelProduk. Jika tabel kosong, tampilkan tulisan "Belum ada produk". Jika terjadi error, tampilkan pesan error yang informatif.
+
+**Hasil:**
+Fitur **US-07 (List Produk dari Database)** telah selesai dikerjakan sesuai aturan `AGENTS.md` dan kriteria `docs/user-stories.md`.
+
+### File yang Diubah
+1. [app/admin/page.jsx](file:///d:/xampp/htdocs/jersey-rangga/rangga-jersey/app/admin/page.jsx)
+   - Mengambil data produk dari tabel `produk` di Supabase secara *server-side* menggunakan `createAdminClient()`.
+   - Mengurutkan daftar produk berdasarkan kolom `id` (`ascending: true`).
+   - Menghapus ketergantungan pada `produkContoh` dari `lib/data-contoh.js`.
+   - Menampilkan pesan error yang ramah jika terjadi kesalahan pengambilan data.
+2. [components/TabelProduk.jsx](file:///d:/xampp/htdocs/jersey-rangga/rangga-jersey/components/TabelProduk.jsx)
+   - Menambahkan kondisi penanganan jika `daftarProduk` kosong untuk menampilkan kotak pesan `"Belum ada produk"`.
+
+### Cara Mengetes
+1. Pastikan dev server berjalan (`npm run dev`).
+2. Masuk ke halaman admin di [http://localhost:3000/admin/login](http://localhost:3000/admin/login) dengan akun admin.
+3. Setelah berhasil login dan diarahkan ke [http://localhost:3000/admin](http://localhost:3000/admin):
+   - Pastikan produk yang tampil di tabel adalah data nyata dari tabel `produk` Supabase (misalnya Kopi Bubuk Robusta, Keripik Singkong, dll).
+   - Pastikan foto, nama, kategori, dan harga berformat rupiah tampil sesuai data database.
+   - Jika tabel produk di Supabase kosong, pastikan muncul tulisan *"Belum ada produk"*.
+
+**Perbaikan:**
+-
 
