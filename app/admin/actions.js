@@ -191,5 +191,134 @@ export async function tambahProduk(prevState, formData) {
   redirect("/admin");
 }
 
+export async function ubahProduk(arg1, arg2, arg3) {
+  let id;
+  let form;
+
+  if (arg3 instanceof FormData) {
+    id = arg1;
+    form = arg3;
+  } else if (arg2 instanceof FormData) {
+    form = arg2;
+    id = arg1?.id || form.get("id");
+  } else if (arg1 instanceof FormData) {
+    form = arg1;
+    id = form.get("id");
+  } else {
+    form = arg2 instanceof FormData ? arg2 : arg1 instanceof FormData ? arg1 : null;
+    id = arg1 || form?.get("id");
+  }
+
+  if (!form) {
+    return { error: "Formulir tidak valid." };
+  }
+
+  if (!id) {
+    id = form.get("id")?.toString();
+  }
+
+  if (!id) {
+    return { error: "ID produk tidak valid." };
+  }
+
+  const nama = form.get("nama")?.toString().trim();
+  const hargaRaw = form.get("harga")?.toString().trim();
+  const kategori = form.get("kategori")?.toString().trim() || null;
+  const foto_url = form.get("foto_url")?.toString().trim() || null;
+  const deskripsi = form.get("deskripsi")?.toString().trim() || null;
+
+  if (!nama) {
+    return { error: "Nama produk wajib diisi." };
+  }
+
+  if (!hargaRaw) {
+    return { error: "Harga produk wajib diisi." };
+  }
+
+  const harga = parseInt(hargaRaw, 10);
+  if (isNaN(harga) || harga < 0) {
+    return { error: "Harga harus berupa angka dan minimal 0." };
+  }
+
+  try {
+    const supabase = await createAdminClient();
+
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      return { error: "Anda harus masuk terlebih dahulu untuk mengubah produk." };
+    }
+
+    const { error } = await supabase
+      .from("produk")
+      .update({
+        nama,
+        harga,
+        kategori,
+        foto_url,
+        deskripsi,
+      })
+      .eq("id", id);
+
+    if (error) {
+      return { error: error.message || "Gagal menyimpan perubahan ke database." };
+    }
+  } catch (err) {
+    return {
+      error: err.message || "Terjadi kesalahan saat menyimpan perubahan.",
+    };
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/");
+  revalidatePath(`/produk/${id}`);
+  revalidatePath(`/admin/produk/${id}/ubah`);
+  redirect("/admin");
+}
+
+export async function hapusProduk(idOrFormData) {
+  let id;
+  if (idOrFormData instanceof FormData) {
+    id = idOrFormData.get("id");
+  } else {
+    id = idOrFormData;
+  }
+
+  if (!id) {
+    return { error: "ID produk tidak valid." };
+  }
+
+  try {
+    const supabase = await createAdminClient();
+
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      return { error: "Anda harus masuk terlebih dahulu untuk menghapus produk." };
+    }
+
+    const { error } = await supabase.from("produk").delete().eq("id", id);
+
+    if (error) {
+      return { error: error.message || "Gagal menghapus produk dari database." };
+    }
+  } catch (err) {
+    return {
+      error: err.message || "Terjadi kesalahan saat menghapus produk.",
+    };
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/");
+  return { sukses: true };
+}
+
+
 
 
