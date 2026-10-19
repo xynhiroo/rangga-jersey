@@ -1,4 +1,4 @@
-import KartuProduk from "@/components/KartuProduk";
+import FilterKatalog from "@/components/FilterKatalog";
 import { createServerClient } from "@/lib/supabase/server";
 import { toko } from "@/lib/toko";
 
@@ -34,8 +34,8 @@ export default async function HalamanKatalog() {
         <p className="mt-4 text-sm text-teks-lembut">{toko.jamBuka}</p>
       </section>
 
-      <section aria-labelledby="judul-produk" className="flex flex-col gap-5">
-        <h2 id="judul-produk" className="text-xl font-bold">
+      <section aria-labelledby="judul-produk" className="pb-10">
+        <h2 id="judul-produk" className="mb-5 text-xl font-bold">
           Produk kami
         </h2>
 
@@ -49,11 +49,7 @@ export default async function HalamanKatalog() {
             <p className="text-teks-lembut">Belum ada produk</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-            {daftarProduk.map((produk) => (
-              <KartuProduk key={produk.id} produk={produk} />
-            ))}
-          </div>
+          <FilterKatalog produkList={daftarProduk} />
         )}
       </section>
     </>
