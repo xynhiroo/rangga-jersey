@@ -322,17 +322,49 @@ Fitur **US-05 (Ganti password)** telah selesai dikerjakan sesuai aturan keamanan
    - Klik **Simpan password**.
    - Pastikan muncul pesan hijau sukses: *"Password berhasil diganti."* dan isian form dibersihkan.
    - Klik **Keluar**, lalu coba masuk kembali di `/admin/login` dengan password baru untuk memastikan password telah berhasil diperbarui di Supabase Auth.
-   
+
 **Perbaikan:**
 
 ## US-06 Proteksi halaman admin
 
 **Prompt:**
+Baca AGENTS.md aturan keamanan nomor 3 dan 4, dan docs/user-stories.md bagian US-06.
+
+Buat file proxy.js di root proyek (Next.js 16). Semua rute /admin kecuali /admin/login wajib login dengan Supabase Auth; kalau belum login, alihkan ke /admin/login. Pastikan juga setiap Server Action yang mengubah data memeriksa login di server. Hapus CatatanBelumAktif dari halaman /admin.B
 
 **Hasil:**
+Fitur **US-06 (Proteksi halaman admin)** telah selesai dikerjakan sesuai aturan keamanan `AGENTS.md` (aturan nomor 3 dan 4) dan kriteria `docs/user-stories.md`.
+
+### File yang Dibuat & Diubah
+1. **[proxy.js](file:///d:/xampp/htdocs/jersey-rangga/rangga-jersey/proxy.js)** *(Baru)*
+   - Menggunakan konvensi proteksi rute Next.js 16 (`proxy.js`, pengganti `middleware.js`).
+   - Memeriksa sesi login admin secara server-side menggunakan `@supabase/ssr` (`createServerClient`) bersama `SUPABASE_URL` dan `SUPABASE_PUBLISHABLE_KEY`.
+   - Mengizinkan akses publik hanya ke `/admin/login`.
+   - Mengalihkan pengunjung yang belum terautentikasi pada rute `/admin` mana pun (seperti `/admin`, `/admin/password`, `/admin/produk/...`) langsung ke `/admin/login`.
+2. **[app/admin/actions.js](file:///d:/xampp/htdocs/jersey-rangga/rangga-jersey/app/admin/actions.js)**
+   - Memastikan Server Action yang memodifikasi data (seperti `gantiPassword`) memeriksa sesi login admin di server melalui `supabase.auth.getUser()` sebelum memproses data.
+3. **[app/admin/page.jsx](file:///d:/xampp/htdocs/jersey-rangga/rangga-jersey/app/admin/page.jsx)**
+   - Menghapus komponen `CatatanBelumAktif` dan import-nya karena halaman admin telah diproteksi.
+
+---
+
+### Cara Mengetes
+1. Jalankan server aplikasi (`npm run dev` atau `npm run build` && `npm run start`).
+2. **Uji Akses Tanpa Login (Incognito / Penyamaran)**:
+   - Buka browser jendela penyamaran (incognito).
+   - Akses [http://localhost:3000/admin](http://localhost:3000/admin) -> Pastikan otomatis dialihkan ke [http://localhost:3000/admin/login](http://localhost:3000/admin/login).
+   - Akses [http://localhost:3000/admin/password](http://localhost:3000/admin/password) -> Pastikan otomatis dialihkan ke [http://localhost:3000/admin/login](http://localhost:3000/admin/login).
+   - Akses [http://localhost:3000/admin/produk/baru](http://localhost:3000/admin/produk/baru) -> Pastikan otomatis dialihkan ke [http://localhost:3000/admin/login](http://localhost:3000/admin/login).
+3. **Uji Akses Halaman Login**:
+   - Akses [http://localhost:3000/admin/login](http://localhost:3000/admin/login) -> Halaman form login dapat dibuka normal tanpa pengalihan berulang.
+4. **Uji Akses Setelah Login**:
+   - Masuk dengan akun admin yang valid di [http://localhost:3000/admin/login](http://localhost:3000/admin/login).
+   - Pastikan berhasil masuk ke dashboard [http://localhost:3000/admin](http://localhost:3000/admin) dan tidak ada lagi kotak catatan belum aktif.
 
 **Perbaikan:**
+-
 
 ## Debugging dan fitur bonus
 
 Tambahkan bagian baru untuk setiap error yang kamu perbaiki atau fitur bonus yang kamu kerjakan.
+
